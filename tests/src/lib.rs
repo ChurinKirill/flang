@@ -1,13 +1,9 @@
-use compiler::functions::*;
-use compiler::lexer::*;
-use compiler::elements::*;
-
 // Тесты
 #[cfg(test)]
 mod tests {
-    use compiler::lexer;
-
-    use super::*;
+    use compiler::lexer::*;
+    use compiler::functions::*;
+    use compiler::elements::*;
 
     #[test]
     fn add_int() {
@@ -46,16 +42,37 @@ mod tests {
         func.execute();
     }
 
-
     #[test]
-    fn tokenize() {
-        let mut lexer: Lexer = Lexer::new("(\"Hello, World!\")".to_string());
+    fn long_tokenize() {
+         let mut lexer: Lexer = Lexer::new("(fn main returning int,\n\t(body,\n\t(=, a: int, 5),\nreturn 0\n)\n)".to_string());
 
         let tokens: Vec<Token>  = lexer.tokenize();
 
+        println!("{:?}", tokens);
+
         let expected: Vec<Token> = vec![
             Token::LBr,
-            Token::Data { value: ConstValue::Str { value: "Hello, World!".to_string() } },
+            Token::Keyword { value: Keyword::Fn },
+            Token::Identifier { value: "main".to_string() },
+            Token::Keyword { value: Keyword::Returning },
+            Token::DataType { value: DataType::Int },
+            Token::Comma,
+            Token::LBr,
+            Token::Keyword { value: Keyword::Body },
+            Token::Comma,
+            Token::LBr,
+            Token::Equal,
+            Token::Comma,
+            Token::Identifier { value: "a".to_string() },
+            Token::Colon,
+            Token::DataType { value: DataType::Int },
+            Token::Comma,
+            Token::Data { value: ConstValue::Int { value: 5 } },
+            Token::RBr,
+            Token::Comma,
+            Token::Keyword { value: Keyword::Return },
+            Token::Data { value: ConstValue::Int { value: 0 } },
+            Token::RBr,
             Token::RBr,
         ];
 

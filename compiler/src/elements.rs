@@ -7,6 +7,14 @@ pub enum Token {
     Colon,
     Data {value: ConstValue},
     Keyword {value: Keyword},
+    DataType {value: DataType},
+    // Встроенные функции
+    Print,
+    Plus,
+    Minus,
+    Multiply,
+    Divide,
+    Equal,
 }
 
 #[derive(PartialEq, Debug)]
@@ -23,7 +31,17 @@ pub enum Keyword {
     Fn,
     Returning,
     Return,
-    Body
+    Body,
+    Args,
+}
+
+#[derive(PartialEq, Debug)]
+pub enum DataType {
+    Int,
+    Float,
+    Str,
+    Bool,
+    Void,
 }
 
 
