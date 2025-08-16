@@ -1,4 +1,4 @@
-#[derive(PartialEq, Debug)]
+#[derive(PartialEq, Debug, Clone)]
 pub enum Token {
     Identifier {value: String},
     LBr,
@@ -17,7 +17,7 @@ pub enum Token {
     Equal,
 }
 
-#[derive(PartialEq, Debug)]
+#[derive(PartialEq, Debug, Clone)]
 pub enum ConstValue {
     Int {value: i64},
     Float {value: f64},
@@ -26,7 +26,7 @@ pub enum ConstValue {
     Void,
 }
 
-#[derive(PartialEq, Debug)]
+#[derive(PartialEq, Debug, Clone)]
 pub enum Keyword {
     Fn,
     Returning,
@@ -35,7 +35,7 @@ pub enum Keyword {
     Args,
 }
 
-#[derive(PartialEq, Debug)]
+#[derive(PartialEq, Debug, Clone)]
 pub enum DataType {
     Int,
     Float,

@@ -6,31 +6,33 @@ pub trait Fn<T> {
     fn execute(&self) -> T;
 }
 
-pub struct FnConst<T> {
-    pub identifier: String,
-    pub args: [T; 1], // константное значение
-}
 
-impl Fn<i64> for FnConst<i64> {
-    fn execute(&self) -> i64 {
-        self.args[0]
-    }
-}
-impl Fn<f64> for FnConst<f64> {
-    fn execute(&self) -> f64 {
-        self.args[0]
-    }
-}
-impl Fn<bool> for FnConst<bool> {
-    fn execute(&self) -> bool {
-        self.args[0]
-    }
-}
-impl Fn<String> for FnConst<String> {
-    fn execute(&self) -> String {
-        self.args[0].clone()
-    }
-}
+// pub struct FnConst<T> {
+//     pub identifier: String,
+//     pub args: [T; 1], // константное значение
+// }
+
+// impl Fn<i64> for FnConst<i64> {
+//     fn execute(&self) -> i64 {
+//         self.args[0]
+//     }
+// }
+// impl Fn<f64> for FnConst<f64> {
+//     fn execute(&self) -> f64 {
+//         self.args[0]
+//     }
+// }
+// impl Fn<bool> for FnConst<bool> {
+//     fn execute(&self) -> bool {
+//         self.args[0]
+//     }
+// }
+// impl Fn<String> for FnConst<String> {
+//     fn execute(&self) -> String {
+//         self.args[0].clone()
+//     }
+// }
+
 
 
 // Сложение переданных аргументов (int, float, string)
