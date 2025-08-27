@@ -1,8 +1,8 @@
 use crate::elements::DataType;
 
-trait Node {}
+pub trait Node {}
 
-struct FnunctionDefinitionNode {
+pub struct FnunctionDefinitionNode {
     name: String,
     args: Vec<DataType>,
     body: BodyNode,
@@ -11,17 +11,17 @@ struct FnunctionDefinitionNode {
 
 impl Node for FnunctionDefinitionNode {}
 
-struct ExpressionNode {
+pub struct ExpressionNode {
     content: dyn Node,
 }
 
-struct BodyNode {
+pub struct BodyNode {
     content: Vec<Box<dyn Node>>,
 }
 
 impl Node for BodyNode {}
 
-struct FunctionInvocationNode {
+pub struct FunctionInvocationNode {
     name: String,
     args: Vec<Box<ExpressionNode>>,
     return_type: DataType
@@ -30,7 +30,7 @@ struct FunctionInvocationNode {
 impl Node for FunctionInvocationNode {}
 
 
-struct VariableDeclarationNode {
+pub struct VariableDeclarationNode {
     name: String,
     data_type: DataType,
     value: ExpressionNode,
@@ -38,7 +38,7 @@ struct VariableDeclarationNode {
 
 impl Node for VariableDeclarationNode {}
 
-struct IfStatementNode {
+pub struct IfStatementNode {
     statement: BodyNode,
     else_clause: Option<BodyNode>,
     condition: ExpressionNode,
@@ -46,18 +46,17 @@ struct IfStatementNode {
 
 impl Node for IfStatementNode {}
 
-struct WhileStatementNode {
+pub struct WhileStatementNode {
     body: BodyNode,
     condition: ExpressionNode,
 }
 
-struct ReturnNode {
+pub struct ReturnNode {
     return_value: ExpressionNode,
 }
 
-impl Node for ReturnNode {}
 
-struct ConstNode<T> {
+pub struct ConstNode<T> {
     value: T,
 }
 
@@ -66,3 +65,13 @@ impl Node for ConstNode<f64> {}
 impl Node for ConstNode<bool> {}
 impl Node for ConstNode<String> {}
 
+pub struct IdentifierNode {
+    name: String
+}
+
+impl Node for IdentifierNode {}
+impl IdentifierNode {
+    pub fn new(name: &str) -> Self {
+        IdentifierNode { name: name.to_string() }
+    }
+}

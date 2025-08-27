@@ -43,8 +43,9 @@ mod tests {
     }
 
     #[test]
+    // TODO: переписать тест (expected)
     fn long_tokenize() {
-         let mut lexer: Lexer = Lexer::new("(fn main returning int,\n\t(body,\n\t(=, a: int, 5),\nreturn 0\n)\n)".to_string());
+        let mut lexer: Lexer = Lexer::new("(fn, main: int,\n\t(body,\n\t(=, a: int, 5),\nreturn 0\n)\n)".to_string());
 
         let tokens: Vec<Token>  = lexer.tokenize();
 
