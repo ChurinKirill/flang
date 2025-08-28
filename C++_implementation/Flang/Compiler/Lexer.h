@@ -1,6 +1,4 @@
 #pragma once
-#ifndef LEXER_H
-#define LEXER_H
 
 #include <string>
 #include <vector>
@@ -30,4 +28,3 @@ public:
 	std::vector<Tokens::IToken*> tokenize();
 };
 
-#endif // !_LEXER_H_

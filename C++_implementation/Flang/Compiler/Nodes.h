@@ -1,6 +1,4 @@
 #pragma once
-#ifndef NODES_H
-#define NODES_H
 
 #include "DataTypes.h"
 #include <vector>
@@ -115,4 +113,3 @@ namespace Nodes {
 
 }
 
-#endif // !NODES_H

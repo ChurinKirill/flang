@@ -1,6 +1,4 @@
 #pragma once
-#ifndef PARSER_H
-#define PARSER_H
 
 #include "Nodes.h"
 #include "Tokens.h"
@@ -28,4 +26,3 @@ public:
 	Nodes::INode* parseFunc(const std::vector<std::vector<Tokens::IToken*>*>& content);
 };
 
-#endif // !PARSER_H

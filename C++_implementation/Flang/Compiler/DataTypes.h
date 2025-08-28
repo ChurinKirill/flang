@@ -1,6 +1,4 @@
 #pragma once
-#ifndef DATATYPES_H
-#define DATATYPES_H
 
 namespace DataTypes {
 	struct IDataType {};
@@ -12,4 +10,3 @@ namespace DataTypes {
 	struct Void : IDataType {};
 }
 
-#endif // !_DATATYPES_H_

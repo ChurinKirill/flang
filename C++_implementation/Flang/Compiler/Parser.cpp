@@ -1,5 +1,6 @@
 #include "pch.h"
-#include "Utils.h"
+#include "Memory.h"
+#include "Parser.h"
 #include <typeinfo>
 
 using namespace std;
@@ -132,7 +133,7 @@ Nodes::BodyNode* Parser::makeBody(const vector<Tokens::IToken*>& content) {
 		body->push_back(expr);
 	}
 	// clearing temporary vector
-	Utils::clearVector2D(*grouped_content);
+	clearVector2D(*grouped_content);
 
 	// result
 	Nodes::BodyNode* result = new Nodes::BodyNode(body);
@@ -175,7 +176,7 @@ Nodes::INode* Parser::parseFunc(const vector<vector<Tokens::IToken*>*>& content)
 			Nodes::BodyNode* body = makeBody(*content.at(2));
 
 			// cleaning temporary vector
-			Utils::clearVector2D(*argTokens);
+			clearVector2D(*argTokens);
 
 			// result
 			Nodes::FunctionDefinitionNode* node = new Nodes::FunctionDefinitionNode(
