@@ -15,9 +15,10 @@ namespace Nodes {
 	struct ExpressionNode : INode {
 		INode* content;
 
-		/*ExpressionNode(INode* content) {
+		ExpressionNode() {};
+		ExpressionNode(INode* content) {
 			this->content = content;
-		}*/
+		}
 	};
 
 	struct BodyNode : INode {
@@ -31,7 +32,6 @@ namespace Nodes {
 	struct FunctionDefinitionNode : INode {
 		string name;
 		vector<pair<string, DataTypes::IDataType*>*>* args; // nullptr - args are absent
-		//vector<DataTypes::IDataType*>* args;
 		DataTypes::IDataType* returnType;
 		BodyNode* body;
 

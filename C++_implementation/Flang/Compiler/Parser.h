@@ -12,17 +12,19 @@ private:
 	size_t pos;
 	size_t inputLength;
 
-	
+
 
 public:
 	Parser(std::vector<Tokens::IToken*> input);
 
-	// Пока все вспомогательные функции публичны (для тестов)
-	// TODO: после тестирования сделать приватными
+	std::vector<Nodes::FunctionDefinitionNode*>* parse();
+
+	// TODO: сделать приватными после окончания тестирования
 	std::vector<Tokens::IToken*>* getFunctionContent(const std::vector<Tokens::IToken*>& tokens, size_t start);
 	std::vector<std::vector<Tokens::IToken*>*>* groupArguments(const std::vector<Tokens::IToken*>& content);
 	Nodes::ExpressionNode* makeExpression(const std::vector<Tokens::IToken*>& content);
 	Nodes::BodyNode* makeBody(const std::vector<Tokens::IToken*>& content);
 	Nodes::INode* parseFunc(const std::vector<std::vector<Tokens::IToken*>*>& content);
+	std::vector<std::vector<Tokens::IToken*>*>* groupFunctionsGlobal(const std::vector<Tokens::IToken*>& tokens);
 };
 

@@ -79,7 +79,7 @@ string Lexer::readDigit() {
 string Lexer::readWord() {
 	size_t start = pos;
 	char current = input[start];
-	while (pos < inputLength && isalpha(current)) {
+	while (pos < inputLength && (isalpha(current) || current == '_')) {
 		pos++;
 		current = input[pos];
 	}
@@ -87,46 +87,14 @@ string Lexer::readWord() {
 }
 
 Tokens::IToken* Lexer::checkWord(string word) {
-	if (word == "fn") {
-		Tokens::Keyword* token = new Tokens::Keyword(new Tokens::Fn{});
+	if (word == "defn") {
+		Tokens::Keyword* token = new Tokens::Keyword(new Tokens::Defn{});
 		return token;
 	}
 	else if (word == "return") {
 		Tokens::Keyword* token = new Tokens::Keyword(new Tokens::Return{});
 		return token;
 	}
-	/*else if (word == "body") {
-		Tokens::Keyword* token = new Tokens::Keyword(new Tokens::Body{});
-		return token;
-	}
-	else if (word == "args") {
-		Tokens::Keyword* token = new Tokens::Keyword(new Tokens::Args{});
-		return token;
-	}*/
-	/*else if (word == "+") {
-		Tokens::Plus* token = new Tokens::Plus{};
-		return token;
-	}
-	else if (word == "-") {
-		Tokens::Minus* token = new Tokens::Minus{};
-		return token;
-	}
-	else if (word == "*") {
-		Tokens::Multiply* token = new Tokens::Multiply{};
-		return token;
-	}
-	else if (word == "/") {
-		Tokens::Divide* token = new Tokens::Divide{};
-		return token;
-	}
-	else if (word == "=") {
-		Tokens::Equal* token = new Tokens::Equal{};
-		return token;
-	}
-	else if (word == "print") {
-		Tokens::Print* token = new Tokens::Print{};
-		return token;
-	}*/
 	else if (word == "int") {
 		Tokens::DataType* token = new Tokens::DataType(new DataTypes::Int{});
 		return token;

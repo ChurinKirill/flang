@@ -1,9 +1,39 @@
 #include "pch.h"
-#include "Memory.h"
 #include "Parser.h"
 #include <typeinfo>
 
 using namespace std;
+
+vector<vector<Tokens::IToken*>*>* Parser::groupFunctionsGlobal(const std::vector<Tokens::IToken*>& tokens) {
+	vector<vector<Tokens::IToken*>*>* result = new vector<vector<Tokens::IToken*>*>();
+
+	size_t len = tokens.size();
+	size_t pos = 0;
+	size_t level = 0;
+
+	while (pos < len) {
+		vector<Tokens::IToken*>* group = new vector<Tokens::IToken*>();
+		Tokens::IToken* current = tokens[pos];
+		while (true) {
+			if (typeid(*current) == typeid(Tokens::LBr))
+				level++;
+			else if (typeid(*current) == typeid(Tokens::RBr))
+				level--;
+
+			if (level == 0 || pos == len) {
+				group->push_back(current);
+				break;
+			}
+			group->push_back(current);
+			pos++;
+			current = tokens[pos];
+		}
+		result->push_back(group);
+		pos++;
+	}
+
+	return result;
+}
 
 vector<Tokens::IToken*>* Parser::getFunctionContent(const vector<Tokens::IToken*>& tokens, size_t start) {
 	size_t len = tokens.size();
@@ -75,12 +105,12 @@ Nodes::ExpressionNode* Parser::makeExpression(const vector<Tokens::IToken*>& con
 	Nodes::ExpressionNode* res = new Nodes::ExpressionNode();
 
 	if (content.size() == 1) {
-		if (typeid(content.at(0)) == typeid(Tokens::Identifier)) {
+		if (typeid(*content.at(0)) == typeid(Tokens::Identifier)) {
 			auto t = dynamic_cast<Tokens::Identifier*>(content.at(0));
 			Nodes::IdentifierNode* node = new Nodes::IdentifierNode(t->value);
 			res->content = node;
 		}
-		else if (typeid(content.at(0)) == typeid(Tokens::ConstValue)) {
+		else if (typeid(*content.at(0)) == typeid(Tokens::ConstValue)) {
 			auto t = dynamic_cast<Tokens::ConstValue*>(content.at(0));
 			Nodes::ConstNode* node = new Nodes::ConstNode(t->value);
 			res->content = node;
@@ -103,25 +133,25 @@ Nodes::BodyNode* Parser::makeBody(const vector<Tokens::IToken*>& content) {
 	for (vector<Tokens::IToken*>* el : *grouped_content) {
 		Nodes::ExpressionNode* expr = new Nodes::ExpressionNode();
 
-		if (typeid(el->at(0)) == typeid(Tokens::LBr)) {
+		if (typeid(*el->at(0)) == typeid(Tokens::LBr)) {
 			Nodes::INode* node = parseFunc(*groupArguments(*getFunctionContent(*el, 1)));
 			expr->content = node;
 		}
-		else if (typeid(el->at(0)) == typeid(Tokens::Keyword)) {
+		else if (typeid(*el->at(0)) == typeid(Tokens::Keyword)) {
 			auto keyword = dynamic_cast<Tokens::IKeyword*>(el->at(0));
 			if (typeid(keyword) == typeid(Tokens::Return)) {
 				Nodes::ExpressionNode* retExpr = new Nodes::ExpressionNode();
 
-				if (typeid(el->at(1)) == typeid(Tokens::LBr)) {
+				if (typeid(*el->at(1)) == typeid(Tokens::LBr)) {
 					Nodes::INode* node = parseFunc(*groupArguments(*getFunctionContent(*el, 2)));
 					retExpr->content = node;
 				}
-				else if (typeid(el->at(1)) == typeid(Tokens::Identifier)) {
+				else if (typeid(*el->at(1)) == typeid(Tokens::Identifier)) {
 					auto t = dynamic_cast<Tokens::Identifier*>(el->at(1));
 					Nodes::IdentifierNode* node = new Nodes::IdentifierNode(t->value);
 					retExpr->content = node;
 				}
-				else if (typeid(el->at(1)) == typeid(Tokens::ConstValue)) {
+				else if (typeid(*el->at(1)) == typeid(Tokens::ConstValue)) {
 					auto t = dynamic_cast<Tokens::ConstValue*>(el->at(1));
 					Nodes::ConstNode* node = new Nodes::ConstNode(t->value);
 					retExpr->content = node;
@@ -142,10 +172,10 @@ Nodes::BodyNode* Parser::makeBody(const vector<Tokens::IToken*>& content) {
 
 Nodes::INode* Parser::parseFunc(const vector<vector<Tokens::IToken*>*>& content) {
 	// keywords
-	if (typeid(content.at(0)->at(0)) == typeid(Tokens::Keyword)) {
+	if (typeid(*content.at(0)->at(0)) == typeid(Tokens::Keyword)) {
 		auto keyword = dynamic_cast<Tokens::Keyword*>(content.at(0)->at(0));
 		// fn
-		if (typeid(keyword->value) == typeid(Tokens::Fn)) {
+		if (typeid(*keyword->value) == typeid(Tokens::Defn)) {
 
 			auto name = dynamic_cast<Tokens::Identifier*>(content.at(0)->at(1));
 			auto returnType = dynamic_cast<Tokens::DataType*>(content.at(0)->at(3));
@@ -189,18 +219,18 @@ Nodes::INode* Parser::parseFunc(const vector<vector<Tokens::IToken*>*>& content)
 
 		}
 		// if
-		else if (typeid(keyword->value) == typeid(Tokens::If)) {
+		else if (typeid(*keyword->value) == typeid(Tokens::If)) {
 			Nodes::ExpressionNode* condition = new Nodes::ExpressionNode();
 			if (typeid(content.at(0)->at(1)) == typeid(Tokens::LBr)) {
 				Nodes::INode* node = parseFunc(*groupArguments(*getFunctionContent(*content.at(0), 2)));
 				condition->content = node;
 			}
-			else if (typeid(content.at(0)->at(1)) == typeid(Tokens::Identifier)) {
+			else if (typeid(*content.at(0)->at(1)) == typeid(Tokens::Identifier)) {
 				auto t = dynamic_cast<Tokens::Identifier*>(content.at(0)->at(1));
 				Nodes::IdentifierNode* node = new Nodes::IdentifierNode(t->value);
 				condition->content = node;
 			}
-			else if (typeid(content.at(0)->at(1)) == typeid(Tokens::ConstValue)) {
+			else if (typeid(*content.at(0)->at(1)) == typeid(Tokens::ConstValue)) {
 				auto t = dynamic_cast<Tokens::ConstValue*>(content.at(0)->at(1));
 				Nodes::ConstNode* node = new Nodes::ConstNode(t->value);
 				condition->content = node;
@@ -224,18 +254,18 @@ Nodes::INode* Parser::parseFunc(const vector<vector<Tokens::IToken*>*>& content)
 			return node;
 		}
 		// while
-		else if (typeid(keyword->value) == typeid(Tokens::While)) {
+		else if (typeid(*keyword->value) == typeid(Tokens::While)) {
 			Nodes::ExpressionNode* condition = new Nodes::ExpressionNode();
-			if (typeid(content.at(0)->at(1)) == typeid(Tokens::LBr)) {
+			if (typeid(*content.at(0)->at(1)) == typeid(Tokens::LBr)) {
 				Nodes::INode* node = parseFunc(*groupArguments(*getFunctionContent(*content.at(0), 2)));
 				condition->content = node;
 			}
-			else if (typeid(content.at(0)->at(1)) == typeid(Tokens::Identifier)) {
+			else if (typeid(*content.at(0)->at(1)) == typeid(Tokens::Identifier)) {
 				auto t = dynamic_cast<Tokens::Identifier*>(content.at(0)->at(1));
 				Nodes::IdentifierNode* node = new Nodes::IdentifierNode(t->value);
 				condition->content = node;
 			}
-			else if (typeid(content.at(0)->at(1)) == typeid(Tokens::ConstValue)) {
+			else if (typeid(*content.at(0)->at(1)) == typeid(Tokens::ConstValue)) {
 				auto t = dynamic_cast<Tokens::ConstValue*>(content.at(0)->at(1));
 				Nodes::ConstNode* node = new Nodes::ConstNode(t->value);
 				condition->content = node;
@@ -250,7 +280,7 @@ Nodes::INode* Parser::parseFunc(const vector<vector<Tokens::IToken*>*>& content)
 		}
 	}
 	// Identifier
-	else if (typeid(content.at(0)->at(0)) == typeid(Tokens::Identifier)) {
+	else if (typeid(*content.at(0)->at(0)) == typeid(Tokens::Identifier)) {
 		auto identifier = dynamic_cast<Tokens::Identifier*>(content.at(0)->at(0));
 		// variable declaration
 		if (identifier->value == "=" && content.at(1)->size() == 3) {
@@ -284,8 +314,41 @@ Nodes::INode* Parser::parseFunc(const vector<vector<Tokens::IToken*>*>& content)
 	}
 }
 
+// TODO: починить
+std::vector<Nodes::FunctionDefinitionNode*>* Parser::parse() {
+	vector<Nodes::FunctionDefinitionNode*>* result = new vector<Nodes::FunctionDefinitionNode*>();
+
+	vector<vector<Tokens::IToken*>*>* groupedFuncs = groupFunctionsGlobal(input);
+	for (vector<Tokens::IToken*>* func : *groupedFuncs) {
+		vector<Tokens::IToken*>* content = getFunctionContent(*func, 1);
+		vector<vector<Tokens::IToken*>*>* groupedContent = groupArguments(*content);
+
+		Nodes::INode* node = parseFunc(*groupedContent);
+		if (typeid(*node) != typeid(Nodes::FunctionDefinitionNode))
+			throw "ParsingException: all global (...) must be function definitions - (defn ...)";
+		auto funcDef = dynamic_cast<Nodes::FunctionDefinitionNode*>(node);
+
+		result->push_back(funcDef);
+
+		delete node;
+		node = nullptr;
+
+		clearVector(*content);
+		content = nullptr;
+		clearVector2D(*groupedContent);
+		groupedContent = nullptr;
+	}
+
+	
+	clearVector(*groupedFuncs);
+	groupedFuncs = nullptr;
+
+	return result;
+}
+
 Parser::Parser(vector<Tokens::IToken*> input) {
 	this->input = input;
 	this->pos = 0;
 	this->inputLength = input.size();
 }
+

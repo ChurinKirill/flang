@@ -15,7 +15,7 @@ namespace Tokens
 	};
 
 
-	struct Fn : IKeyword {};
+	struct Defn : IKeyword {};
 	struct Return : IKeyword {};
 	struct If : IKeyword {};
 	struct While : IKeyword {};

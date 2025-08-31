@@ -10,9 +10,9 @@
 // add headers that you want to pre-compile here
 #include "framework.h"
 
-//#include "Tokens.h"
-//#include "Nodes.h"
-//#include "Memory.h"
+#include "Tokens.h"
+#include "Nodes.h"
+#include "Memory.h"
 
 //#include "Lexer.h"
 //#include "Parser.h"
